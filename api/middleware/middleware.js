@@ -2,7 +2,6 @@ const User = require('../users/users-model');
 const Posts = require('../posts/posts-model');
 
 function logger(req, res, next) {
-  // DO YOUR MAGIC
   const timestamp = new Date().toLocaleString();
   const method = req.method;
   const url = req.originalUrl;
@@ -19,7 +18,7 @@ async function validateUserId(req, res, next) {
       })
     } else {
       req.user = user;
-      next()
+      next();
     }
   } catch (err) {
     next(err);
@@ -27,9 +26,15 @@ async function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
-  // DO YOUR MAGIC
-  console.log('logger middlerware')
-  next();
+  const name = req.body.name;
+  if(!name || typeof name !== 'string' || !name.trim().length){
+    res.status(400).json({
+      message: "missing required name field"
+    })
+  } else {
+    req.user = name;
+    next();
+  }
 }
 
 function validatePost(req, res, next) {
