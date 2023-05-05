@@ -1,5 +1,4 @@
 const User = require('../users/users-model');
-const Posts = require('../posts/posts-model');
 
 function logger(req, res, next) {
   const timestamp = new Date().toLocaleString();
@@ -27,23 +26,29 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
   const name = req.body.name;
-  if(!name || typeof name !== 'string' || !name.trim().length){
+  if(!name || typeof name !== 'string' || !name.trim()){
     res.status(400).json({
       message: "missing required name field"
     })
   } else {
-    req.user = name;
+    req.name = name.trim();
     next();
   }
 }
 
 function validatePost(req, res, next) {
-  // DO YOUR MAGIC
-  console.log('logger middlerware')
+  const text = req.body.text;
+  if(!text || !text.trim()){
+    res.status(400).json({
+      message: "missing required text field"
+    })
+  } else {
+    req.text = text.trim()
+  }
   next();
 }
 
-// do not forget to expose these functions to other modules
+
 module.exports = {
   validateUserId, 
   logger,
