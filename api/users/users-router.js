@@ -48,10 +48,12 @@ router.delete("/:id", validateUserId, (req, res, next) => {
     .catch(next)
 });
 
-router.get("/:id/posts", validateUserId, (req, res) => {
-  // RETURN THE ARRAY OF USER POSTS
-  // this needs a middleware to verify user id
-  console.log(req.user);
+router.get("/:id/posts", validateUserId, (req, res, next) => {
+  User.getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(next)
 });
 
 router.post("/:id/posts", validateUserId, (req, res) => {
@@ -67,5 +69,5 @@ router.use((error, req, res, next) => {//eslint-disable-line
     customMessage: "Something bad happened in the users router",
   });
 });
-// do not forget to export the router
+
 module.exports = router;
